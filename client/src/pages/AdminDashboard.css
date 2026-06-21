@@ -1,0 +1,115 @@
+.admin-dashboard {
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.admin-dashboard h1 {
+  color: #DC143C;
+  margin-bottom: 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #333;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  color: #DC143C;
+  border-bottom-color: #DC143C;
+}
+
+.tab-btn:hover {
+  color: #DC143C;
+}
+
+.bookings-section h2,
+.settings-section h2 {
+  color: #DC143C;
+  margin-bottom: 1.5rem;
+}
+
+.bookings-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.booking-card {
+  background-color: #1a1a1a;
+  padding: 1.5rem;
+  border-left: 4px solid #666;
+  border-radius: 5px;
+}
+
+.booking-card.status-pending {
+  border-left-color: #ffc107;
+}
+
+.booking-card.status-confirmed {
+  border-left-color: #28a745;
+}
+
+.booking-card.status-denied {
+  border-left-color: #dc3545;
+}
+
+.booking-card h3 {
+  color: #DC143C;
+  margin-bottom: 1rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.status-badge.pending {
+  background-color: #ffc107;
+  color: black;
+}
+
+.status-badge.confirmed {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-badge.denied {
+  background-color: #dc3545;
+  color: white;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-confirm {
+  background-color: #28a745;
+}
+
+.btn-confirm:hover {
+  background-color: #218838;
+}
+
+.btn-deny {
+  background-color: #dc3545;
+}
+
+.btn-deny:hover {
+  background-color: #c82333;
+}
