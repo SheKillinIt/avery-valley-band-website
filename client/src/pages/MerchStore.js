@@ -5,7 +5,6 @@ import './MerchStore.css';
 function MerchStore() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -14,77 +13,69 @@ function MerchStore() {
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchProducts();
   }, []);
 
   const addToCart = (product) => {
-    const existing = cart.find(item => item._id === product._id);
-    if (existing) {
-      setCart(cart.map(item =>
-        item._id === product._id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
-    }
+    setCart([...cart, product]);
   };
 
-  const removeFromCart = (productId) => {
-    setCart(cart.filter(item => item._id !== productId));
+  const removeFromCart = (index) => {
+    setCart(cart.filter((_, i) => i !== index));
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <main className="merch-page">
-      <h1>🎵 Merch Store</h1>
+    <main className="merch-store">
+      <div className="merch-header">
+        <h1>Merch Store</h1>
+        <p>Support the band by purchasing our exclusive merchandise!</p>
+      </div>
+
       <div className="merch-container">
-        <div className="products-section">
-          <h2>Products</h2>
-          {loading ? (
-            <p>Loading products...</p>
-          ) : products.length > 0 ? (
-            <div className="products-grid">
-              {products.map(product => (
+        <section className="products-section">
+          <h2>Available Products</h2>
+          <div className="products-grid">
+            {products.length > 0 ? (
+              products.map(product => (
                 <div key={product._id} className="product-card">
                   {product.image && <img src={product.image} alt={product.name} />}
                   <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p className="price">${product.price.toFixed(2)}</p>
+                  <p className="product-description">{product.description}</p>
+                  <p className="product-price">${product.price.toFixed(2)}</p>
+                  <p className="product-stock">{product.quantity > 0 ? `In Stock: ${product.quantity}` : 'Out of Stock'}</p>
                   <button
                     className="btn"
                     onClick={() => addToCart(product)}
                     disabled={product.quantity === 0}
                   >
-                    {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                    Add to Cart
                   </button>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p>No products available yet.</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p>No products available at the moment.</p>
+            )}
+          </div>
+        </section>
 
-        <div className="cart-section">
+        <section className="cart-section">
           <h2>Shopping Cart</h2>
           {cart.length > 0 ? (
             <>
               <div className="cart-items">
-                {cart.map(item => (
-                  <div key={item._id} className="cart-item">
+                {cart.map((item, index) => (
+                  <div key={index} className="cart-item">
                     <div>
                       <h4>{item.name}</h4>
-                      <p>Qty: {item.quantity} × ${item.price.toFixed(2)}</p>
+                      <p>${item.price.toFixed(2)}</p>
                     </div>
                     <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item._id)}
+                      className="btn-remove"
+                      onClick={() => removeFromCart(index)}
                     >
                       Remove
                     </button>
@@ -92,14 +83,14 @@ function MerchStore() {
                 ))}
               </div>
               <div className="cart-total">
-                <h3>Total: ${total.toFixed(2)}</h3>
-                <button className="btn">Checkout</button>
+                <h3>Total: ${totalPrice.toFixed(2)}</h3>
+                <button className="btn">Proceed to Checkout</button>
               </div>
             </>
           ) : (
-            <p>Your cart is empty</p>
+            <p className="empty-cart">Your cart is empty</p>
           )}
-        </div>
+        </section>
       </div>
     </main>
   );

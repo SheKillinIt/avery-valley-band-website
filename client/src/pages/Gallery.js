@@ -4,17 +4,17 @@ import './Gallery.css';
 
 function Gallery() {
   const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchGallery = async () => {
       try {
         const response = await axios.get('/api/band');
-        setImages(response.data.gallery || []);
+        if (response.data.gallery) {
+          setImages(response.data.gallery);
+        }
       } catch (error) {
         console.error('Error fetching gallery:', error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchGallery();
@@ -22,23 +22,37 @@ function Gallery() {
 
   return (
     <main className="gallery-page">
-      <h1>Gallery</h1>
-      <p>Check out our performances and events</p>
+      <h1>Photo Gallery</h1>
+      <p className="gallery-intro">Check out our amazing performances and events</p>
 
-      {loading ? (
-        <p>Loading gallery...</p>
-      ) : images.length > 0 ? (
-        <div className="gallery-grid">
-          {images.map((image, index) => (
-            <div key={index} className="gallery-item">
-              <img src={image.url} alt={image.caption} />
-              {image.caption && <p>{image.caption}</p>}
-            </div>
-          ))}
+      {selectedImage && (
+        <div className="modal" onClick={() => setSelectedImage(null)}>
+          <div className="modal-content">
+            <span className="close">&times;</span>
+            <img src={selectedImage.url} alt={selectedImage.caption} />
+            <p>{selectedImage.caption}</p>
+          </div>
         </div>
-      ) : (
-        <p>Gallery coming soon...</p>
       )}
+
+      <div className="gallery-grid">
+        {images.length > 0 ? (
+          images.map((image, index) => (
+            <div
+              key={index}
+              className="gallery-item"
+              onClick={() => setSelectedImage(image)}
+            >
+              <img src={image.url} alt={image.caption} />
+              <div className="gallery-overlay">
+                <p>{image.caption}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="no-images">No images in gallery yet.</p>
+        )}
+      </div>
     </main>
   );
 }
